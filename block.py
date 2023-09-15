@@ -1,13 +1,10 @@
 import logging
-
+import random
 import pygame
 import common
 from brick import Brick
 from common import (
-    rand_uint,
     is_legal,
-    brick_width,
-    brick_height,
     speed
 )
 
@@ -15,8 +12,6 @@ from common import (
 # 多个砖块组成的方块
 class Block:
     stopped: bool = False
-    brick_width: int = brick_width
-    brick_height: int = brick_height
     move_interval: int = speed
 
     def __init__(self, p_bricks_layout, p_direction, p_color):
@@ -127,6 +122,11 @@ def get_block():
         p_direction=rand_uint(len(block_info[block_type]) - 2),
         p_color=block_info[block_type][-1],
     )
+
+
+# 随机正整数
+def rand_uint(n: int) -> int:
+    return random.randint(0, n)
 
 
 # 砖块构成形状的布局和颜色

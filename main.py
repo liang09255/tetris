@@ -51,6 +51,7 @@ pygame.display.set_icon(pygame.image.load("resources/images/icon.png"))
 game_over_img = pygame.image.load("resources/images/game_over.png")  # 游戏结束图标
 logging.info("初始化完成")
 next_block = get_block()
+next_block_init_position = (field_width + 2, 5)  # 下一个形状初始化位置
 
 # 开始运行游戏
 while True:
@@ -59,7 +60,7 @@ while True:
     cur_block.set_position(common.cur_block_init_position)
     logging.info("新方块开始下落")
     next_block = get_block()
-    next_block.set_position(common.next_block_init_position)
+    next_block.set_position(next_block_init_position)
 
     if not is_legal(cur_block.cur_layout, cur_block.position):
         cur_block.draw()
@@ -94,6 +95,7 @@ while True:
 
 # 游戏结束
 common.screen.blit(game_over_img, (field_width / 2 * brick_width, (field_height / 2 - 2) * brick_height))
+logging.info("游戏结束，总得分：%d" % common.score)
 while True:
     for event in pygame.event.get():
         time.sleep(0.1)
