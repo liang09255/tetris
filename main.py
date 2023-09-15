@@ -4,13 +4,7 @@ import time
 import common
 from block import get_block
 from pygame.locals import K_w, K_a, K_s, K_d, K_UP, K_DOWN, K_LEFT, K_RIGHT
-from common import (
-    field_width,
-    field_height,
-    brick_width,
-    brick_height,
-    is_legal
-)
+from common import field_width, field_height, brick_width, brick_height, is_legal
 
 
 def draw_field():

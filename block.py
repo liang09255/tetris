@@ -3,10 +3,7 @@ import random
 import pygame
 import common
 from brick import Brick
-from common import (
-    is_legal,
-    speed
-)
+from common import is_legal, speed
 
 
 # 多个砖块组成的方块
