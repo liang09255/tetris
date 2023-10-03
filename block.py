@@ -64,7 +64,7 @@ class Block:
             y += 1
         y -= 1
         for (brick, (x0, y0)) in zip(self.predict_bricks, self.cur_layout):
-            brick.position = (x+x0, y+y0)
+            brick.position = (x + x0, y + y0)
             brick.color = pygame.Color(140, 144, 148)
 
     def down(self):
@@ -89,11 +89,12 @@ class Block:
                 row_nums.append(row)
 
         row_nums.sort()  # 保证行更新顺序
+        delete_line_num = 0
         for row in row_nums:
             # 判断该行是否全部被填充
             if None in common.bricks[row]:
                 continue
-            common.current_score += 1
+            delete_line_num += 1
             logging.info("消除一行，当前得分：%d" % common.current_score)
             # 被消除行置空
             common.bricks[row] = [None for _ in range(common.field_width)]
@@ -104,6 +105,8 @@ class Block:
                         b.position = (b.position[0], b.position[1] + 1)
                 common.bricks[r] = common.bricks[r - 1][:]
             common.bricks[0] = [None for _ in range(common.field_width)]
+        common.update_score(delete_line_num)
+        common.update_speed()
 
     def update(self):
         self.draw_predict()
