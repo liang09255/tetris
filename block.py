@@ -35,13 +35,13 @@ class Block:
     # 绘制到屏幕上
     def draw(self):
         for brick in self.bricks:
-            brick.draw(screen=common.screen)
+            brick.draw()
 
     def draw_predict(self):
         if open_predict:
             self.predict()
             for brick in self.predict_bricks:
-                brick.draw(screen=common.screen)
+                brick.draw()
 
     # 左移一格
     def left(self):

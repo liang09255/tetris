@@ -18,7 +18,7 @@ def draw_field():
     for line in common.bricks:
         for brick in line:
             if brick is not None:
-                brick.draw(screen=common.screen)
+                brick.draw()
 
 
 def draw_info_panel():
