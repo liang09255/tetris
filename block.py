@@ -74,8 +74,8 @@ class Block:
             # 判断该行是否全部被填充
             if None in common.bricks[row]:
                 continue
-            common.score += 1
-            logging.info("消除一行，当前得分：%d" % common.score)
+            common.current_score += 1
+            logging.info("消除一行，当前得分：%d" % common.current_score)
             # 被消除行置空
             common.bricks[row] = [None for _ in range(common.field_width)]
             # 被消除行上面的所有行下移
@@ -112,7 +112,7 @@ class Block:
 
 
 # 获取一个方块
-def get_block():
+def get_block() -> Block:
     block_type = rand_uint(6)
     return Block(
         p_bricks_layout=block_info[block_type][:-1],
