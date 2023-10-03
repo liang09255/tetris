@@ -1,9 +1,12 @@
+import copy
 import logging
 import random
 import pygame
 import common
 from brick import Brick
-from common import is_legal, speed
+from common import is_legal, speed, open_predict
+
+last_move = -1
 
 
 # 多个砖块组成的方块
@@ -17,13 +20,13 @@ class Block:
         self.cur_layout = self.bricks_layout[self.direction]
         self.position = common.cur_block_init_position
         self.bricks = []
+        self.predict_bricks = []
         for (x, y) in self.cur_layout:
-            self.bricks.append(
-                Brick(
-                    p_position=(self.position[0] + x, self.position[1] + y),
-                    p_color=p_color,
-                )
+            b = Brick(
+                p_position=(self.position[0] + x, self.position[1] + y),
+                p_color=p_color,
             )
+            self.bricks.append(b)
 
     def set_position(self, position):
         self.position = position
@@ -33,6 +36,12 @@ class Block:
     def draw(self):
         for brick in self.bricks:
             brick.draw(screen=common.screen)
+
+    def draw_predict(self):
+        if open_predict:
+            self.predict()
+            for brick in self.predict_bricks:
+                brick.draw(screen=common.screen)
 
     # 左移一格
     def left(self):
@@ -47,6 +56,16 @@ class Block:
         if is_legal(self.cur_layout, new_position):
             self.position = new_position
             self.refresh_bricks()
+
+    def predict(self):
+        self.predict_bricks = [copy.copy(b) for b in self.bricks]
+        (x, y) = (self.position[0], self.position[1] + 1)
+        while is_legal(self.cur_layout, (x, y)):
+            y += 1
+        y -= 1
+        for (brick, (x0, y0)) in zip(self.predict_bricks, self.cur_layout):
+            brick.position = (x+x0, y+y0)
+            brick.color = pygame.Color(140, 144, 148)
 
     def down(self):
         (x, y) = (self.position[0], self.position[1] + 1)
@@ -87,14 +106,16 @@ class Block:
             common.bricks[0] = [None for _ in range(common.field_width)]
 
     def update(self):
+        self.draw_predict()
         self.draw()
+        global last_move
         t = pygame.time.get_ticks()
-        if common.last_move == -1 or t - common.last_move >= self.move_interval:
+        if last_move == -1 or t - last_move >= self.move_interval:
             new_position = (self.position[0], self.position[1] + 1)
             if is_legal(self.cur_layout, new_position):
                 self.position = new_position
                 self.refresh_bricks()
-                common.last_move = t
+                last_move = t
             else:
                 self.stop()
 
@@ -108,6 +129,7 @@ class Block:
         for (brick, (x, y)) in zip(self.bricks, self.cur_layout):
             brick.position = (self.position[0] + x, self.position[1] + y)
         self.refresh_bricks()
+        self.draw_predict()
         self.draw()
 
 
@@ -138,7 +160,7 @@ block_info = (
     #    oo
     (
         ((1, 0), (2, 0), (1, 1), (2, 1)),
-        pygame.Color(52, 152, 219)
+        pygame.Color(0, 137, 255)
     ),
     # 2: o
     #   ooo
@@ -181,6 +203,6 @@ block_info = (
         ((0, 0), (0, 1), (1, 1), (2, 1)),
         ((0, 2), (1, 2), (1, 1), (1, 0)),
         ((2, 2), (2, 1), (1, 1), (0, 1)),
-        pygame.Color(149, 165, 166)
+        pygame.Color(138, 201, 255)
     )
 )
