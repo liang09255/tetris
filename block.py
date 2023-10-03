@@ -4,16 +4,13 @@ import random
 import pygame
 import common
 from brick import Brick
-from common import is_legal, speed, open_predict
+from common import is_legal, open_predict
 
 last_move = -1
 
 
 # 多个砖块组成的方块
 class Block:
-    stopped: bool = False
-    move_interval: int = speed
-
     def __init__(self, p_bricks_layout, p_direction, p_color):
         self.bricks_layout = p_bricks_layout
         self.direction = p_direction
@@ -21,6 +18,8 @@ class Block:
         self.position = common.cur_block_init_position
         self.bricks = []
         self.predict_bricks = []
+        self.stopped = False
+        self.move_interval = common.speed
         for (x, y) in self.cur_layout:
             b = Brick(
                 p_position=(self.position[0] + x, self.position[1] + y),
@@ -95,7 +94,6 @@ class Block:
             if None in common.bricks[row]:
                 continue
             delete_line_num += 1
-            logging.info("消除一行，当前得分：%d" % common.current_score)
             # 被消除行置空
             common.bricks[row] = [None for _ in range(common.field_width)]
             # 被消除行上面的所有行下移

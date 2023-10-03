@@ -3,8 +3,8 @@ import pygame
 
 
 def init():
-    logging.info("开始运行俄罗斯方块")
     logging_init()
+    logging.info("开始运行俄罗斯方块")
     pygame_init()
     logging.info("初始化完成")
 
