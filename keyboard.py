@@ -1,4 +1,6 @@
 import pygame
+
+import common
 from block import Block
 from pygame.locals import K_w, K_a, K_s, K_d, K_UP, K_DOWN, K_LEFT, K_RIGHT
 
@@ -18,6 +20,8 @@ def listen(cur_block: Block):
                 cur_block.right()
             elif event.key == K_s or event.key == K_DOWN:
                 cur_block.down()
+            elif event.key == pygame.K_p:
+                common.open_predict = not common.open_predict
 
 
 def quit_game():

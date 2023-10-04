@@ -4,7 +4,7 @@ import random
 import pygame
 import common
 from brick import Brick
-from common import is_legal, open_predict
+from common import is_legal
 
 last_move = -1
 
@@ -37,7 +37,7 @@ class Block:
             brick.draw()
 
     def draw_predict(self):
-        if open_predict:
+        if common.open_predict:
             self.predict()
             for brick in self.predict_bricks:
                 brick.draw()

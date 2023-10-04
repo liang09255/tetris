@@ -23,14 +23,31 @@ def draw_field():
 
 def draw_info_panel():
     font = pygame.font.SysFont("simhei", 18)
-    score_text = font.render("Score:" + str(common.current_score), True, (255, 255, 255))
-    history_score_text = font.render("MaxScore:" + str(history_max.score), True, (255, 255, 255))
+
+    score_text = font.render("得分:" + str(common.current_score), True, (255, 255, 255))
     text_rect_score = score_text.get_rect()
     text_rect_score.topleft = (field_width * brick_width + 10, 5)
     common.screen.blit(score_text, text_rect_score)
+
+    history_score_text = font.render("历史最高:" + str(history_max.score), True, (255, 255, 255))
     text_rect_history_score = history_score_text.get_rect()
     text_rect_history_score.topleft = (field_width * brick_width + 10, 30)
     common.screen.blit(history_score_text, text_rect_history_score)
+
+    speed_text = font.render("速度:%.2f格/秒" % (1000 / common.speed), True, (255, 255, 255))
+    text_rect_speed = speed_text.get_rect()
+    text_rect_speed.topleft = (field_width * brick_width + 10, 55)
+    common.screen.blit(speed_text, text_rect_speed)
+
+    time_text = font.render("用时:%ds" % (pygame.time.get_ticks() // 1000), True, (255, 255, 255))
+    text_rect_time = time_text.get_rect()
+    text_rect_time.topleft = (field_width * brick_width + 10, 80)
+    common.screen.blit(time_text, text_rect_time)
+
+    tips_text = font.render("按p开启或关闭下落预测", True, (255, 255, 255))
+    text_rect_tips = tips_text.get_rect()
+    text_rect_tips.topleft = (field_width * brick_width + 10, 105)
+    common.screen.blit(tips_text, text_rect_tips)
 
 
 # 绘制分界线
