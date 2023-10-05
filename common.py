@@ -3,7 +3,7 @@ import logging
 
 import pygame
 
-field_width, field_height = 10, 15  # 游戏画面长宽
+field_width, field_height = 13, 25  # 游戏画面长宽
 brick_width, brick_height = 30, 30  # 方块长宽
 cur_block_init_position = (4, 0)  # 当前初始化位置
 info_panel_width = 7  # 信息面板宽度
