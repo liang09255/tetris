@@ -72,6 +72,8 @@ class Block:
             self.position = (x, y)
             self.refresh_bricks()
             y += 1
+        global last_move
+        last_move = -1
 
     def refresh_bricks(self):
         for (brick, (x, y)) in zip(self.bricks, self.cur_layout):
@@ -106,6 +108,7 @@ class Block:
         common.update_score(delete_line_num)
         common.update_speed()
 
+    # 更新当前方块的位置(自动下落)
     def update(self):
         self.draw_predict()
         self.draw()
@@ -120,6 +123,7 @@ class Block:
             else:
                 self.stop()
 
+    # 旋转
     def rotate(self):
         new_direction = (self.direction + 1) % len(self.bricks_layout)
         new_layout = self.bricks_layout[new_direction]
@@ -130,8 +134,9 @@ class Block:
         for (brick, (x, y)) in zip(self.bricks, self.cur_layout):
             brick.position = (self.position[0] + x, self.position[1] + y)
         self.refresh_bricks()
-        self.draw_predict()
-        self.draw()
+
+    def auto(self):
+        print("auto")
 
 
 # 获取一个方块
