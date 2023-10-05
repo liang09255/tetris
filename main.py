@@ -20,12 +20,15 @@ while True:
     # 显示一个方块
     cur_block = next_block
     cur_block.set_position(common.cur_block_init_position)
+    cur_block.auto() # 自动下落
+
     next_block = get_block()
     next_block.set_position(next_block_init_position)
     # 判断是否合法
     if not is_legal(cur_block.cur_layout, cur_block.position):
         cur_block.draw()
         break
+
     # 当前方块下落过程
     while not cur_block.stopped:
         # 监听键盘事件

@@ -1,10 +1,11 @@
 import copy
-import logging
+import math
 import random
 import pygame
 import common
+import pierre_dellacherie
 from brick import Brick
-from common import is_legal
+from common import is_legal, field_width, field_height
 
 last_move = -1
 
@@ -43,18 +44,22 @@ class Block:
                 brick.draw()
 
     # 左移一格
-    def left(self):
+    def left(self) -> bool:
         new_position = (self.position[0] - 1, self.position[1])
         if is_legal(self.cur_layout, new_position):
             self.position = new_position
             self.refresh_bricks()
+            return True
+        return False
 
     # 右移一格
-    def right(self):
+    def right(self) -> bool:
         new_position = (self.position[0] + 1, self.position[1])
         if is_legal(self.cur_layout, new_position):
             self.position = new_position
             self.refresh_bricks()
+            return True
+        return False
 
     def predict(self):
         self.predict_bricks = [copy.copy(b) for b in self.bricks]
@@ -72,8 +77,13 @@ class Block:
             self.position = (x, y)
             self.refresh_bricks()
             y += 1
-        global last_move
-        last_move = -1
+
+    def up(self):
+        (x, y) = (self.position[0], self.position[1] - 1)
+        while is_legal(self.cur_layout, (x, y)):
+            self.position = (x, y)
+            self.refresh_bricks()
+            y -= 1
 
     def refresh_bricks(self):
         for (brick, (x, y)) in zip(self.bricks, self.cur_layout):
@@ -124,19 +134,82 @@ class Block:
                 self.stop()
 
     # 旋转
-    def rotate(self):
+    def rotate(self) -> bool:
         new_direction = (self.direction + 1) % len(self.bricks_layout)
         new_layout = self.bricks_layout[new_direction]
         if not is_legal(new_layout, self.position):
-            return
+            return False
         self.direction = new_direction
         self.cur_layout = new_layout
         for (brick, (x, y)) in zip(self.bricks, self.cur_layout):
             brick.position = (self.position[0] + x, self.position[1] + y)
         self.refresh_bricks()
+        return True
 
-    def auto(self):
-        print("auto")
+    def auto(self, retry: bool = False):
+        max_score = -math.inf
+
+        while self.left():
+            continue
+
+        first = True
+        score_list = []
+        while self.right():
+            if first:
+                self.left()
+                first = False
+            rotate_count = 0
+            first_rotate = True
+            while first_rotate or (self.rotate() and rotate_count < 4):
+                first_rotate = False
+                rotate_count += 1
+                self.down()
+                now_score = self._add_and_cal_score()
+                score_list.append(now_score)
+                self.up()
+        if len(score_list) == 0:
+            return
+        max_score = max(score_list)
+        average_score = 0
+        if retry:
+            average_score = sum(score_list) / len(score_list)
+        # 执行最大得分的操作
+        while self.left():
+            continue
+
+        first = True
+        try_count = 0
+        while self.right():
+            if first:
+                self.left()
+                first = False
+            rotate_count = 0
+            first_rotate = True
+            while first_rotate or (self.rotate() and rotate_count < 4):
+                try_count += 1
+                first_rotate = False
+                rotate_count += 1
+                self.down()
+                now_score = self._add_and_cal_score()
+                if now_score >= max_score or (retry and now_score >= average_score):
+                    print("success", max_score, now_score)
+                    return
+                self.up()
+        self.auto(True)
+
+
+    def _add_and_cal_score(self) -> int:
+        virtual_screen = [[0 for _ in range(field_width)] for _ in range(field_height)]
+        # 将已有的砖块加入虚拟屏幕
+        for line in common.bricks:
+            for brick in line:
+                if brick is not None:
+                    (x, y) = brick.position
+                    virtual_screen[y][x] = 1
+        for brick in self.bricks:
+            (x, y) = brick.position
+            virtual_screen[y][x] = 2
+        return pierre_dellacherie.cal_score(virtual_screen)
 
 
 # 获取一个方块
@@ -147,6 +220,11 @@ def get_block() -> Block:
         p_direction=rand_uint(len(block_info[block_type]) - 2),
         p_color=block_info[block_type][-1],
     )
+
+
+def reset_last_move():
+    global last_move
+    last_move = -1
 
 
 # 随机正整数

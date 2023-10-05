@@ -3,7 +3,7 @@ import logging
 
 import pygame
 
-field_width, field_height = 13, 25  # 游戏画面长宽
+field_width, field_height = 21, 25  # 游戏画面长宽
 brick_width, brick_height = 30, 30  # 方块长宽
 cur_block_init_position = (4, 0)  # 当前初始化位置
 info_panel_width = 7  # 信息面板宽度
@@ -24,7 +24,7 @@ screen = pygame.display.set_mode(
 def is_legal(layout, position) -> bool:
     (x0, y0) = position
     for (x, y) in layout:
-        if x + x0 < 0 or y + y0 < 0 or x + x0 >= field_width or y + y0 >= field_height:
+        if x + x0 < 0 or y + y0 < 0 or x + x0 >= field_width or y + y0 >= field_height or y + y0 < 0:
             return False
         if bricks[y + y0][x + x0] is not None:
             return False
