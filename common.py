@@ -46,6 +46,6 @@ def update_score(delete_line: int):
 def update_speed():
     global current_score, speed, min_speed, max_speed
     last_speed = copy.copy(speed)
-    speed = min_speed + (max_speed - min_speed) // (1 + current_score)
+    speed = min_speed + (max_speed - min_speed) // (1 + current_score/5)
     if last_speed != speed:
         logging.info("当前速度：%.2f格/s" % (1000 / speed))
