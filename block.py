@@ -238,6 +238,8 @@ def update_score(delete_line: int):
 
 
 def two_player_update_score(bricks: list):
+    if not common.two_player:
+        return
     player_one_bricks_count = 0
     player_two_bricks_count = 0
     for brick in bricks:
