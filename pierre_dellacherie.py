@@ -4,17 +4,18 @@ import logging
 
 # 输入方块下落后的游戏画板
 # 0表示没有方块，1表示有方块，2表示当前方块
-def cal_score(s: list) -> int:
+def cal_score(s: list) -> float:
     # 经验权重
-    return (
-            - 45 * _cal_landingHeight(s)
-            + 34 * _cal_erodedPieceCellsMetric(s)
-            # + 50 * _cal_erodedPieceCellsMetric(s)
-            - 50 * _cal_boardRowTransitions(s)
-            - 50 * _cal_boardColTransitions(s)
-            - 79 * _cal_boardBuriedHoles(s)
-            - 34 * _cal_boardWells(s)
-    )
+    # return (
+    #         - 4.500158825082766 * _cal_landingHeight(s)
+    #         + 3.4181268101392694 * _cal_erodedPieceCellsMetric(s)
+    #         - 3.2178882868487753 * _cal_boardRowTransitions(s)
+    #         - 9.348695305445199 * _cal_boardColTransitions(s)
+    #         - 7.899265427351652 * _cal_boardBuriedHoles(s)
+    #         - 3.3855972247263626 * _cal_boardWells(s)
+    # )
+    return (100.500158825082766 * _cal_landingHeight(s)
+            + 100.4181268101392694 * _cal_erodedPieceCellsMetric(s))
 
 
 # 计算高度
@@ -22,7 +23,7 @@ def _cal_landingHeight(s: list) -> int:
     for i in range(len(s)):
         for j in range(len(s[i])):
             if s[i][j] == 2:
-                return len(s) - i - 1
+                return len(s) - i
     # 正常不会执行到这
     logging.error("高度计算错误")
     return 0

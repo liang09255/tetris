@@ -44,9 +44,14 @@ def draw_info_panel():
     text_rect_time.topleft = (field_width * brick_width + 10, 80)
     common.screen.blit(time_text, text_rect_time)
 
-    tips_text = font.render("按p开启或关闭下落预测", True, (255, 255, 255))
+    interfere_text = font.render("干扰等级:%d (按O切换)" % common.difficulty, True, (255, 255, 255))
+    text_rect_interfere = interfere_text.get_rect()
+    text_rect_interfere.topleft = (field_width * brick_width + 10, 105)
+    common.screen.blit(interfere_text, text_rect_interfere)
+
+    tips_text = font.render("按P开启或关闭下落预测", True, (255, 255, 255))
     text_rect_tips = tips_text.get_rect()
-    text_rect_tips.topleft = (field_width * brick_width + 10, 105)
+    text_rect_tips.topleft = (field_width * brick_width + 10, 130)
     common.screen.blit(tips_text, text_rect_tips)
 
 

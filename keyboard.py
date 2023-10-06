@@ -24,6 +24,8 @@ def listen(cur_block: Block):
                 block.reset_last_move()
             elif event.key == pygame.K_p:
                 common.open_predict = not common.open_predict
+            elif event.key == pygame.K_o:
+                common.difficulty = (common.difficulty + 1) % 4
 
 
 def quit_game():

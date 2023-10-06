@@ -1,4 +1,5 @@
 import copy
+import logging
 import math
 import random
 import pygame
@@ -8,6 +9,7 @@ from brick import Brick
 from common import is_legal, field_width, field_height
 
 last_move = -1
+block_count = 0
 
 
 # 多个砖块组成的方块
@@ -146,18 +148,16 @@ class Block:
         self.refresh_bricks()
         return True
 
-    def auto(self, retry: bool = False):
-        max_score = -math.inf
-
+    # 干扰块
+    def interfere(self):
         while self.left():
             continue
 
-        first = True
         score_list = []
-        while self.right():
-            if first:
-                self.left()
-                first = False
+        min_score = -math.inf
+        first = True
+        while first or self.right():
+            first = False
             rotate_count = 0
             first_rotate = True
             while first_rotate or (self.rotate() and rotate_count < 4):
@@ -167,38 +167,29 @@ class Block:
                 now_score = self._add_and_cal_score()
                 score_list.append(now_score)
                 self.up()
-        if len(score_list) == 0:
-            return
-        max_score = max(score_list)
-        average_score = 0
-        if retry:
-            average_score = sum(score_list) / len(score_list)
-        # 执行最大得分的操作
+
+        min_score = min(score_list, default=min_score)
+
         while self.left():
             continue
-
         first = True
-        try_count = 0
-        while self.right():
-            if first:
-                self.left()
-                first = False
+        while first or self.right():
+            first = False
             rotate_count = 0
             first_rotate = True
             while first_rotate or (self.rotate() and rotate_count < 4):
-                try_count += 1
                 first_rotate = False
                 rotate_count += 1
                 self.down()
                 now_score = self._add_and_cal_score()
-                if now_score >= max_score or (retry and now_score >= average_score):
-                    print("success", max_score, now_score)
+                if now_score == min_score:
                     return
                 self.up()
-        self.auto(True)
+        # 正常不会走到这里
+        logging.warning("干扰块位置生成失败(仅会在游戏结束出现一次)")
+        self.down()
 
-
-    def _add_and_cal_score(self) -> int:
+    def _add_and_cal_score(self) -> float:
         virtual_screen = [[0 for _ in range(field_width)] for _ in range(field_height)]
         # 将已有的砖块加入虚拟屏幕
         for line in common.bricks:
@@ -215,6 +206,8 @@ class Block:
 # 获取一个方块
 def get_block() -> Block:
     block_type = rand_uint(6)
+    global block_count
+    block_count += 1
     return Block(
         p_bricks_layout=block_info[block_type][:-1],
         p_direction=rand_uint(len(block_info[block_type]) - 2),

@@ -3,12 +3,13 @@ import logging
 
 import pygame
 
-field_width, field_height = 21, 25  # 游戏画面长宽
+field_width, field_height = 11, 21  # 游戏画面长宽
 brick_width, brick_height = 30, 30  # 方块长宽
 cur_block_init_position = (4, 0)  # 当前初始化位置
 info_panel_width = 7  # 信息面板宽度
 current_score = 0  # 总得分
 open_predict = True  # 是否开启预测
+difficulty = 0  # 困难模式
 bricks = [[None for _ in range(field_width)] for _ in range(field_height)]  # 整个游戏画面砖块矩阵
 speed = 2000  # 移动间隔时间
 min_speed = 200  # 最小移动间隔时间

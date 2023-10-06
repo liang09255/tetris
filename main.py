@@ -1,5 +1,6 @@
 import logging
 import pygame
+import block
 import common
 import draw
 import keyboard
@@ -20,7 +21,12 @@ while True:
     # 显示一个方块
     cur_block = next_block
     cur_block.set_position(common.cur_block_init_position)
-    cur_block.auto() # 自动下落
+    if (
+            (common.difficulty == 1 and block.block_count % 8 == 0) or
+            (common.difficulty == 2 and block.block_count % 5 == 0) or
+            (common.difficulty == 3 and block.block_count % 3 == 0)
+    ):
+        cur_block.interfere()
 
     next_block = get_block()
     next_block.set_position(next_block_init_position)
