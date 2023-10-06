@@ -73,7 +73,7 @@ def draw_info_panel():
         common.screen.blit(interfere_text, text_rect_interfere)
     # 下落预测
     text_count += 1
-    predict_text = font.render("按P开启或关闭下落预测", True, white)
+    predict_text = font.render("按p开启或关闭下落预测", True, white)
     text_rect_predict = predict_text.get_rect()
     text_rect_predict.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
     common.screen.blit(predict_text, text_rect_predict)
@@ -87,6 +87,22 @@ def draw_info_panel():
     text_rect_player = player_text.get_rect()
     text_rect_player.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
     common.screen.blit(player_text, text_rect_player)
+    # 操作提示
+    if common.two_player:
+        text_count += 1
+        operate_one = "红方：WASD"
+        operate_one_text = font.render(operate_one, True, white)
+        text_rect_operate_one = operate_one_text.get_rect()
+        text_rect_operate_one.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
+        common.screen.blit(operate_one_text, text_rect_operate_one)
+        text_count += 1
+        operate_two = "蓝方：↑←↓→"
+        operate_two_text = font.render(operate_two, True, white)
+        text_rect_operate_two = operate_two_text.get_rect()
+        text_rect_operate_two.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
+        common.screen.blit(operate_two_text, text_rect_operate_two)
+
+
 
 
 # 绘制分界线
