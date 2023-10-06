@@ -14,7 +14,7 @@ block_count = 0
 
 # 多个砖块组成的方块
 class Block:
-    def __init__(self, p_bricks_layout, p_direction, p_color):
+    def __init__(self, p_bricks_layout, p_direction, p_color, block_id: int = 0):
         self.bricks_layout = p_bricks_layout
         self.direction = p_direction
         self.cur_layout = self.bricks_layout[self.direction]
@@ -23,10 +23,12 @@ class Block:
         self.predict_bricks = []
         self.stopped = False
         self.move_interval = common.speed
+        self.block_id = block_id
         for (x, y) in self.cur_layout:
             b = Brick(
                 p_position=(self.position[0] + x, self.position[1] + y),
                 p_color=p_color,
+                block_id=block_id
             )
             self.bricks.append(b)
 
@@ -72,6 +74,7 @@ class Block:
         for (brick, (x0, y0)) in zip(self.predict_bricks, self.cur_layout):
             brick.position = (x + x0, y + y0)
             brick.color = pygame.Color(140, 144, 148)
+            brick.predict = True
 
     def down(self):
         (x, y) = (self.position[0], self.position[1] + 1)
@@ -152,7 +155,6 @@ class Block:
     def interfere(self):
         while self.left():
             continue
-
         score_list = []
         min_score = -math.inf
         first = True
@@ -186,7 +188,7 @@ class Block:
                     return
                 self.up()
         # 正常不会走到这里
-        logging.warning("干扰块位置生成失败(仅会在游戏结束出现一次)")
+        logging.warning("干扰块位置生成失败(仅可能在游戏结束出现一次)")
         self.down()
 
     def _add_and_cal_score(self) -> float:
@@ -212,6 +214,7 @@ def get_block() -> Block:
         p_bricks_layout=block_info[block_type][:-1],
         p_direction=rand_uint(len(block_info[block_type]) - 2),
         p_color=block_info[block_type][-1],
+        block_id=block_count
     )
 
 

@@ -25,7 +25,15 @@ def listen(cur_block: Block):
             elif event.key == pygame.K_p:
                 common.open_predict = not common.open_predict
             elif event.key == pygame.K_o:
-                common.difficulty = (common.difficulty + 1) % 4
+                if common.two_player:
+                    # 双人模式下禁用
+                    common.difficulty = 0
+                else:
+                    common.difficulty = (common.difficulty + 1) % 4
+            elif event.key == pygame.K_i:
+                common.two_player = not common.two_player
+                # 双人模式下禁用
+                common.difficulty = 0
 
 
 def quit_game():

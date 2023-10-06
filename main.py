@@ -13,7 +13,7 @@ init.init()
 # 获取第一个方块
 next_block = get_block()
 # 下一个形状初始化位置
-next_block_init_position = (field_width + 2, 7)
+next_block_init_position = (field_width + 2, 9)
 
 # 开始运行游戏
 while True:
