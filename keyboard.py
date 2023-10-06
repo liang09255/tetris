@@ -12,7 +12,9 @@ def listen(cur_block: Block):
         if event.type == pygame.QUIT:
             pygame.quit()
             exit(0)
-        if event.type == pygame.KEYDOWN:
+
+        # 单人键位
+        if event.type == pygame.KEYDOWN and not common.two_player:
             if event.key == K_w or event.key == K_UP:
                 cur_block.rotate()
             elif event.key == K_a or event.key == K_LEFT:
@@ -25,15 +27,41 @@ def listen(cur_block: Block):
             elif event.key == pygame.K_p:
                 common.open_predict = not common.open_predict
             elif event.key == pygame.K_o:
-                if common.two_player:
-                    # 双人模式下禁用
-                    common.difficulty = 0
-                else:
-                    common.difficulty = (common.difficulty + 1) % 4
+                common.difficulty = (common.difficulty + 1) % 4
             elif event.key == pygame.K_i:
-                common.two_player = not common.two_player
+                # 切换为双人模式
+                common.two_player = True
                 # 双人模式下禁用
                 common.difficulty = 0
+            return
+
+        # 双人键位
+        if event.type == pygame.KEYDOWN and common.two_player:
+            if block.block_count % 2 == 0:
+                if event.key == K_w:
+                    cur_block.rotate()
+                elif event.key == K_a:
+                    cur_block.left()
+                elif event.key == K_d:
+                    cur_block.right()
+                elif event.key == K_s:
+                    cur_block.down()
+                    block.reset_last_move()
+            else:
+                if event.key == K_UP:
+                    cur_block.rotate()
+                elif event.key == K_LEFT:
+                    cur_block.left()
+                elif event.key == K_RIGHT:
+                    cur_block.right()
+                elif event.key == K_DOWN:
+                    cur_block.down()
+                    block.reset_last_move()
+            if event.key == pygame.K_p:
+                common.open_predict = not common.open_predict
+            elif event.key == pygame.K_i:
+                # 切换为单人模式
+                common.two_player = False
 
 
 def quit_game():

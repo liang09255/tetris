@@ -96,32 +96,11 @@ class Block:
 
     def stop(self):
         self.stopped = True
-        row_nums = []  # 记录有方块的行号
-        # 将这个形状的所有砖块加进砖块列表，并把相应位置赋值为1
+        # 将这个形状的所有砖块加进砖块列表
         for brick in self.bricks:
             (col, row) = brick.position
             common.bricks[row][col] = brick
-            if row not in row_nums:
-                row_nums.append(row)
-
-        row_nums.sort()  # 保证行更新顺序
-        delete_line_num = 0
-        for row in row_nums:
-            # 判断该行是否全部被填充
-            if None in common.bricks[row]:
-                continue
-            delete_line_num += 1
-            # 被消除行置空
-            common.bricks[row] = [None for _ in range(common.field_width)]
-            # 被消除行上面的所有行下移
-            for r in range(row, 0, -1):
-                for b in common.bricks[r]:
-                    if b is not None:
-                        b.position = (b.position[0], b.position[1] + 1)
-                common.bricks[r] = common.bricks[r - 1][:]
-            common.bricks[0] = [None for _ in range(common.field_width)]
-        common.update_score(delete_line_num)
-        common.update_speed()
+        calculate_game_score()
 
     # 更新当前方块的位置(自动下落)
     def update(self):
@@ -221,6 +200,55 @@ def get_block() -> Block:
 def reset_last_move():
     global last_move
     last_move = -1
+
+
+def calculate_game_score():
+    delete_line_num = 0
+    for row in range(field_height):
+        # 判断该行是否全部被填充
+        if None in common.bricks[row]:
+            continue
+        delete_line_num += 1
+        two_player_update_score(common.bricks[row])
+        # 被消除行置空
+        common.bricks[row] = [None for _ in range(common.field_width)]
+        # 被消除行上面的所有行下移
+        for r in range(row, 0, -1):
+            for b in common.bricks[r]:
+                if b is not None:
+                    b.position = (b.position[0], b.position[1] + 1)
+            common.bricks[r] = common.bricks[r - 1][:]
+        common.bricks[0] = [None for _ in range(common.field_width)]
+    # 单人模式更新得分
+    update_score(delete_line_num)
+    common.update_speed()
+
+
+def update_score(delete_line: int):
+    if common.two_player:
+        return
+    if delete_line == 4:
+        common.current_score += 6
+    elif delete_line == 3:
+        common.current_score += 4
+    else:
+        common.current_score += delete_line
+    if delete_line > 0:
+        logging.info("消除%d行，当前得分：%d" % (delete_line, common.current_score))
+
+
+def two_player_update_score(bricks: list):
+    player_one_bricks_count = 0
+    player_two_bricks_count = 0
+    for brick in bricks:
+        if brick.block_id % 2 == 0:
+            player_one_bricks_count += 1
+        else:
+            player_two_bricks_count += 1
+    if player_one_bricks_count > player_two_bricks_count:
+        common.player_one_score += 1
+    else:
+        common.player_two_score += 1
 
 
 # 随机正整数

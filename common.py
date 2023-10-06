@@ -7,6 +7,8 @@ brick_width, brick_height = 30, 30  # 方块长宽
 cur_block_init_position = (4, 0)  # 当前初始化位置
 info_panel_width = 8  # 信息面板宽度
 current_score = 0  # 总得分
+player_one_score = 0  # 玩家一得分
+player_two_score = 0  # 玩家二得分
 open_predict = True  # 是否开启预测
 difficulty = 0  # 困难模式
 two_player = True  # 双人模式
@@ -30,18 +32,6 @@ def is_legal(layout, position) -> bool:
         if bricks[y + y0][x + x0] is not None:
             return False
     return True
-
-
-def update_score(delete_line: int):
-    global current_score
-    if delete_line == 4:
-        current_score += 6
-    elif delete_line == 3:
-        current_score += 4
-    else:
-        current_score += delete_line
-    if delete_line > 0:
-        logging.info("消除%d行，当前得分：%d" % (delete_line, current_score))
 
 
 def update_speed():
