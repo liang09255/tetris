@@ -22,9 +22,9 @@ while True:
     cur_block = next_block
     cur_block.set_position(common.cur_block_init_position)
     if (
-            (common.difficulty == 1 and block.block_count % 8 == 0) or
-            (common.difficulty == 2 and block.block_count % 5 == 0) or
-            (common.difficulty == 3 and block.block_count % 3 == 0)
+            (common.difficulty == 1 and block.block_count % 9 == 0) or
+            (common.difficulty == 2 and block.block_count % 6 == 0) or
+            (common.difficulty == 3 and block.block_count % 4 == 0)
     ):
         cur_block.interfere()
 
