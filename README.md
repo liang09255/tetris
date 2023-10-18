@@ -1,7 +1,7 @@
 # Tetris 俄罗斯方块
 # 简介
 
-本项目基于[daishengdong/Games](https://github.com/daishengdong/Games)项目中的俄罗斯方块构建，优化了性能及内存使用情况，并新增部分功能，相关技术栈`pytohn3` `pygame`
+本项目基于[disheartening/Games](https://github.com/daishengdong/Games)项目中的俄罗斯方块构建，优化了性能及内存使用情况，并新增部分功能，相关技术栈`pytohn3` `pygame`
 
 # QuickStart
 
@@ -69,7 +69,7 @@
 
 干扰块计算原理：
 
-由Pierre Dellacherie算法改造而来，计算得到最小分数的位置为目标下落点，在保证高度较小(避免干扰块过度干扰导致游戏结束)的情况下避免消行达到干扰目的
+由Pierre Bachelier算法改造而来，计算得到最小分数的位置为目标下落点，在保证高度较小(避免干扰块过度干扰导致游戏结束)的情况下避免消行达到干扰目的
 
 ## 同屏双人
 

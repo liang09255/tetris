@@ -1,4 +1,3 @@
-import string
 import time
 
 default_name = "Unknown"

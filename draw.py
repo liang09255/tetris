@@ -22,87 +22,57 @@ def draw_field():
 
 
 def draw_info_panel():
-    font = pygame.font.SysFont("simhei", 18)
     text_count = -1
-    white = pygame.Color(255, 255, 255)
     # 双人/单人得分
     if common.two_player:
         text_count += 1
-        score_text = font.render("蓝色得分:" + str(common.player_one_score), True, white)
-        text_rect_score = score_text.get_rect()
-        text_rect_score.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
-        common.screen.blit(score_text, text_rect_score)
+        _draw_text("蓝色得分:" + str(common.player_one_score), 5 + text_count * 25)
 
         text_count += 1
-        score_text = font.render("红色得分:" + str(common.player_two_score), True, white)
-        text_rect_score = score_text.get_rect()
-        text_rect_score.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
-        common.screen.blit(score_text, text_rect_score)
+        _draw_text("红色得分:" + str(common.player_two_score), 5 + text_count * 25)
     else:
         text_count += 1
-        score_text = font.render("总得分:" + str(common.current_score), True, white)
-        text_rect_score = score_text.get_rect()
-        text_rect_score.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
-        common.screen.blit(score_text, text_rect_score)
+        _draw_text("总得分:" + str(common.current_score), 5 + text_count * 25)
     # 历史最高得分
     if not common.two_player:
         text_count += 1
-        history_score_text = font.render("历史最高:" + str(history_max.score), True, white)
-        text_rect_history_score = history_score_text.get_rect()
-        text_rect_history_score.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
-        common.screen.blit(history_score_text, text_rect_history_score)
+        _draw_text("历史最高:" + str(history_max.score), 5 + text_count * 25)
     # 速度
     text_count += 1
-    speed_text = font.render("速度:%.2f格/秒" % (1000 / common.speed), True, white)
-    text_rect_speed = speed_text.get_rect()
-    text_rect_speed.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
-    common.screen.blit(speed_text, text_rect_speed)
+    _draw_text("速度:%.2f格/秒" % (1000 / common.speed), 5 + text_count * 25)
     # 游戏时长
     if not common.two_player:
         text_count += 1
-        time_text = font.render("用时:%ds" % (pygame.time.get_ticks() // 1000), True, white)
-        text_rect_time = time_text.get_rect()
-        text_rect_time.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
-        common.screen.blit(time_text, text_rect_time)
+        _draw_text("用时:%ds" % (pygame.time.get_ticks() // 1000), 5 + text_count * 25)
     # 干扰等级
     if not common.two_player:
         text_count += 1
-        interfere_text = font.render("干扰等级:%d (按O切换)" % common.difficulty, True, white)
-        text_rect_interfere = interfere_text.get_rect()
-        text_rect_interfere.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
-        common.screen.blit(interfere_text, text_rect_interfere)
+        _draw_text("干扰等级:%d (按O切换)" % common.difficulty, 5 + text_count * 25)
     # 下落预测
     text_count += 1
-    predict_text = font.render("按p开启或关闭下落预测", True, white)
-    text_rect_predict = predict_text.get_rect()
-    text_rect_predict.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
-    common.screen.blit(predict_text, text_rect_predict)
+    _draw_text("按p开启或关闭下落预测", 5 + text_count * 25)
     # 单/双人模式
     text_count += 1
     if common.two_player:
         player_t = "双人模式(按i切换单人)"
     else:
         player_t = "单人模式(按i切换双人)"
-    player_text = font.render(player_t, True, white)
-    text_rect_player = player_text.get_rect()
-    text_rect_player.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
-    common.screen.blit(player_text, text_rect_player)
+    _draw_text(player_t, 5 + text_count * 25)
     # 操作提示
     if common.two_player:
         text_count += 1
-        operate_one = "红方：WASD"
-        operate_one_text = font.render(operate_one, True, white)
-        text_rect_operate_one = operate_one_text.get_rect()
-        text_rect_operate_one.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
-        common.screen.blit(operate_one_text, text_rect_operate_one)
+        _draw_text("红方：WASD", 5 + text_count * 25)
         text_count += 1
-        operate_two = "蓝方：↑←↓→"
-        operate_two_text = font.render(operate_two, True, white)
-        text_rect_operate_two = operate_two_text.get_rect()
-        text_rect_operate_two.topleft = (field_width * brick_width + 10, 5 + text_count * 25)
-        common.screen.blit(operate_two_text, text_rect_operate_two)
+        _draw_text("蓝方：↑←↓→", 5 + text_count * 25)
 
 
+def _draw_text(t: str, height: int):
+    font = pygame.font.SysFont("simhei", 18)
+    white = pygame.Color(255, 255, 255)
+    text = font.render(t, True, white)
+    text_rect = text.get_rect()
+    text_rect.topleft = (field_width * brick_width + 10, height)
+    common.screen.blit(text, text_rect)
 
 
 # 绘制分界线
